@@ -10,7 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Shablon extends JFrame implements GLEventListener, MouseMotionListener {
+public class MulticolorTank extends JFrame implements GLEventListener, MouseMotionListener {
 
     public static DisplayMode dm, dm_old;
     private int lastX, lastY;
@@ -101,7 +101,7 @@ public class Shablon extends JFrame implements GLEventListener, MouseMotionListe
 
         // The canvas
         final GLCanvas glcanvas = new GLCanvas( capabilities );
-        Shablon cube = new Shablon();
+        MulticolorTank cube = new MulticolorTank();
 
         glcanvas.addGLEventListener( cube );
         glcanvas.setSize( 600, 600 );
@@ -111,7 +111,7 @@ public class Shablon extends JFrame implements GLEventListener, MouseMotionListe
         frame.setSize( frame.getContentPane().getPreferredSize() );
         frame.setVisible( true );
         rotateX = 0f; rotateY = 0f;
-        glcanvas.addMouseMotionListener(new Shablon());
+        glcanvas.addMouseMotionListener(new MulticolorTank());
         final FPSAnimator animator = new FPSAnimator(glcanvas, 300,true);
 
         animator.start();
