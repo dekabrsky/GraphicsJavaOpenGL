@@ -2,28 +2,47 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RightColorTank extends JFrame implements GLEventListener, MouseMotionListener {
 
-    public static DisplayMode dm, dm_old;
     private int lastX, lastY;
     private static float rotateX, rotateY;
     private GLU glu = new GLU();
+    Texture tex;
+    int[] textures = new int[1];
 
     @Override
     public void display( GLAutoDrawable drawable ) {
-
         final GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT );
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, -1.0f, -6.0f );
+
+        gl.glEnable(GL2.GL_TEXTURE_2D);
+
+
+        File textureFile = new File("src/textures/metal.jpg");
+        try {
+            tex = TextureIO.newTexture(textureFile, true);
+            tex.enable(gl);
+            tex.bind(gl);
+            textures[0] = tex.getTextureObject(gl);
+            gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Rotate The Cube On X, Y & Z
         //gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
@@ -32,7 +51,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
         greenLight(gl);
 
-        //вставляй сюда
         drawCorpus(gl);
         drawCorpusCovers(gl);
         drawRightTrack(gl);
@@ -56,9 +74,26 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glBegin(9);
         gl.glColor3f(c1, c2, c3);
         int i = 0;
+        TextureCoords texcoords = tex.getImageTexCoords();
         while (i < vertices.size()){
             gl.glNormal3f(vertices.get(i++), vertices.get(i++), vertices.get(i++));
             gl.glVertex3f(vertices.get(i++), vertices.get(i++), vertices.get(i++));
+            switch (i) {
+                case (6) :
+                    gl.glTexCoord2f(texcoords.right(), texcoords.bottom());
+                    break;
+                case (12) :
+                    gl.glTexCoord2f(texcoords.right(), texcoords.top());
+                    break;
+                case (18) :
+                    gl.glTexCoord2f(texcoords.left(), texcoords.top());
+                    break;
+                case (24) :
+                    gl.glTexCoord2f(texcoords.left(), texcoords.bottom());
+                    break;
+                default:
+                    continue;
+            }
         }
         gl.glEnd();
     }
@@ -145,7 +180,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         lastY = e.getY();
     }
 
-    void drawCorpus(GL2 gl){
+    void drawCorpus(GL2 gl) {
         //# Mesh 'Cube.001' with 87 faces
         dp(gl,0.07f,0.64f,0.12f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.95f,0.78f,1.45f,-0.37f, 0f,3.89f,-0.95f,0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.78f,1.45f,-0.37f)));
         dp(gl,0.18f,0.69f,0.1f, new ArrayList<>(Arrays.asList(-9.19f,0.35f,-0.01f,-1f,0.87f,-0.01f, -9.19f,0.35f,-0.01f,-0.92f,1.1f,-0.07f, -9.19f,0.35f,-0.01f,-0.98f,0.93f,-1.67f, -9.19f,0.35f,-0.01f,-0.98f,0.78f,-1.67f)));
@@ -299,6 +334,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawRightTrack(GL2 gl){
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0]);
         dp(gl,0.64f,0.63f,0.87f, new ArrayList<>(Arrays.asList(0f,0f,4f,0.47f,1.41f,1.48f, 0f,0f,4f,0.47f,1.45f,1.48f, 0f,0f,4f,0.34f,1.45f,1.48f, 0f,0f,4f,0.34f,1.41f,1.48f)));
         dp(gl,0.64f,0.62f,0.87f, new ArrayList<>(Arrays.asList(0f,0f,4f,-0.34f,1.41f,1.48f, 0f,0f,4f,-0.34f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.41f,1.48f)));
         dp(gl,0.62f,0.63f,0.8f, new ArrayList<>(Arrays.asList(-0f,4.12f,-0.2f,-0.53f,0.89f,0.9f, -0f,4.12f,-0.2f,-1.09f,0.89f,0.9f, -0f,4.12f,-0.2f,-1.09f,0.87f,0.61f, -0f,4.12f,-0.2f,-0.53f,0.87f,0.61f)));
@@ -401,6 +437,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0.64f,0.63f,0.85f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,-0.53f,0.84f,0.03f, 4.13f,0f,0f,-0.53f,0.83f,-0.27f, 4.13f,0f,0f,-0.53f,0.79f,-0.27f, 4.13f,0f,0f,-0.53f,0.81f,0.03f)));
         dp(gl,0.64f,0.61f,0.86f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,-1.09f,0.84f,0.03f, -4.13f,0f,0f,-1.09f,0.86f,0.32f, -4.13f,0f,0f,-1.09f,0.82f,0.33f, -4.13f,0f,0f,-1.09f,0.81f,0.03f)));
         dp(gl,0.61f,0.62f,0.89f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,-0.53f,0.86f,0.32f, 4.13f,0f,0f,-0.53f,0.84f,0.03f, 4.13f,0f,0f,-0.53f,0.81f,0.03f, 4.13f,0f,0f,-0.53f,0.82f,0.33f)));
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
     }
 
     void drawRightWheels(GL2 gl){
@@ -857,6 +894,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
     void drawLeftTrack(GL2 gl){
         //# Mesh 'Cylinder' with 1 faces
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0]);
         dp(gl,0.61f,0.62f,0.8f, new ArrayList<>(Arrays.asList(0f,0f,0.82f,0.03f,1.66f,1.81f, 0f,0f,0.82f,0f,1.67f,1.81f, 0f,0f,0.82f,-0.03f,1.66f,1.81f, 0f,0f,0.82f,-0.04f,1.63f,1.81f, 0f,0f,0.82f,-0.03f,1.6f,1.81f, 0f,0f,0.82f,0f,1.59f,1.81f, 0f,0f,0.82f,0.03f,1.6f,1.81f, 0f,0f,0.82f,0.04f,1.63f,1.81f)));
         dp(gl,0.62f,0.6f,0.85f, new ArrayList<>(Arrays.asList(0f,4.12f,-0.2f,0.53f,0.89f,0.9f, 0f,4.12f,-0.2f,1.09f,0.89f,0.9f, 0f,4.12f,-0.2f,1.09f,0.87f,0.61f, 0f,4.12f,-0.2f,0.53f,0.87f,0.61f)));
         dp(gl,0.62f,0.64f,0.82f, new ArrayList<>(Arrays.asList(-0f,4.12f,-0.22f,0.53f,0.87f,0.61f, -0f,4.12f,-0.22f,1.09f,0.87f,0.61f, -0f,4.12f,-0.22f,1.09f,0.86f,0.32f, -0f,4.12f,-0.22f,0.53f,0.86f,0.32f)));
@@ -958,6 +996,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0.6f,0.65f,0.8f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,0.53f,0.84f,0.03f, -4.13f,0f,0f,0.53f,0.83f,-0.27f, -4.13f,0f,0f,0.53f,0.79f,-0.27f, -4.13f,0f,0f,0.53f,0.81f,0.03f)));
         dp(gl,0.61f,0.63f,0.86f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,1.09f,0.84f,0.03f, 4.13f,0f,0f,1.09f,0.86f,0.32f, 4.13f,0f,0f,1.09f,0.82f,0.33f, 4.13f,0f,0f,1.09f,0.81f,0.03f)));
         dp(gl,0.62f,0.63f,0.85f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,0.53f,0.86f,0.32f, -4.13f,0f,0f,0.53f,0.84f,0.03f, -4.13f,0f,0f,0.53f,0.81f,0.03f, -4.13f,0f,0f,0.53f,0.82f,0.33f)));
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
     }
 
     void drawLeftWheels(GL2 gl){
