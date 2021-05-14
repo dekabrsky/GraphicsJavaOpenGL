@@ -1,3 +1,5 @@
+package tank;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
@@ -7,7 +9,6 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
@@ -172,7 +173,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpus(GL2 gl) {
-        //# Mesh 'Cube.001' with 87 faces
+        //# Mesh 'demos.Cube.001' with 87 faces
         dp(gl,0.07f,0.64f,0.12f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.95f,0.78f,1.45f,-0.37f, 0f,3.89f,-0.95f,0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.78f,1.45f,-0.37f)));
         dp(gl,0.18f,0.69f,0.1f, new ArrayList<>(Arrays.asList(-9.19f,0.35f,-0.01f,-1f,0.87f,-0.01f, -9.19f,0.35f,-0.01f,-0.92f,1.1f,-0.07f, -9.19f,0.35f,-0.01f,-0.98f,0.93f,-1.67f, -9.19f,0.35f,-0.01f,-0.98f,0.78f,-1.67f)));
         dp(gl,0.1f,0.69f,0.17f, new ArrayList<>(Arrays.asList(9.18f,0.4f,-0.02f,0.92f,1.1f,-0.07f, 9.18f,0.4f,-0.02f,0.85f,1.42f,-0.36f, 9.18f,0.4f,-0.02f,0.86f,1.42f,0.95f, 9.18f,0.4f,-0.02f,0.92f,1.16f,1.41f)));
@@ -263,7 +264,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpusCovers(GL2 gl){
-        //# Mesh 'Cube.001' with 58 faces DONE
+        //# Mesh 'demos.Cube.001' with 58 faces DONE
         dp(gl,0.19f,0.15f,0.18f, new ArrayList<>(Arrays.asList(0f,-3.89f,0.93f,0.14f,1.4f,-0.55f, 0f,-3.89f,0.93f,0.14f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.4f,-0.55f)));
         dp(gl,0.16f,0.11f,0.1f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.93f,0.14f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.22f,-1.39f, 0f,3.89f,-0.93f,0.14f,1.22f,-1.39f)));
         dp(gl,0.17f,0.16f,0.11f, new ArrayList<>(Arrays.asList(0f,0.93f,3.89f,0.14f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.43f,-0.55f, 0f,0.93f,3.89f,0.14f,1.43f,-0.55f)));
@@ -792,7 +793,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawTowerDetails(GL2 gl){
-        //# Mesh 'Cube.011' with 40 faces DONE
+        //# Mesh 'demos.Cube.011' with 40 faces DONE
         dp(gl,0.15f,0.64f,0.19f, new ArrayList<>(Arrays.asList(2.38f,0.15f,-0f,0.27f,1.89f,-0.36f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.44f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.61f, 2.38f,0.15f,-0f,0.27f,1.89f,-0.61f)));
         dp(gl,0.14f,0.68f,0.2f, new ArrayList<>(Arrays.asList(0f,0f,-1.18f,-0.29f,1.53f,-0.61f, 0f,0f,-1.18f,-0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.29f,1.53f,-0.61f)));
         dp(gl,0.11f,0.63f,0.16f, new ArrayList<>(Arrays.asList(-2.38f,0.15f,-0f,-0.29f,1.53f,-0.44f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.36f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.61f, -2.38f,0.15f,-0f,-0.29f,1.53f,-0.61f)));
@@ -833,7 +834,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0.18f,0.68f,0.18f, new ArrayList<>(Arrays.asList(0.53f,0.5f,-1.12f,-0.45f,1.92f,0.16f, 0.53f,0.5f,-1.12f,-0.57f,1.48f,0.1f, 0.53f,0.5f,-1.12f,-0.6f,1.48f,0.1f, 0.53f,0.5f,-1.12f,-0.47f,1.93f,0.16f)));
         dp(gl,0.18f,0.65f,0.16f, new ArrayList<>(Arrays.asList(-0.64f,-2.42f,-0.01f,-0.57f,1.48f,0.1f, -0.64f,-2.42f,-0.01f,-0.61f,1.48f,0.5f, -0.64f,-2.42f,-0.01f,-0.63f,1.48f,0.49f, -0.64f,-2.42f,-0.01f,-0.6f,1.48f,0.1f)));
         dp(gl,0.16f,0.67f,0.11f, new ArrayList<>(Arrays.asList(0.64f,2.42f,0.01f,-0.47f,1.92f,0.45f, 0.64f,2.42f,0.01f,-0.45f,1.92f,0.16f, 0.64f,2.42f,0.01f,-0.47f,1.93f,0.16f, 0.64f,2.42f,0.01f,-0.49f,1.93f,0.45f)));
-        //# Mesh 'Cube.011' with 1 faces
+        //# Mesh 'demos.Cube.011' with 1 faces
     }
 
     void drawGun(GL2 gl){

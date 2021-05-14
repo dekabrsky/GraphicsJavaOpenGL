@@ -1,3 +1,5 @@
+package tank;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
@@ -26,7 +28,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, 0f, -5.0f );
 
-        // Rotate The Cube On X, Y & Z
+        // Rotate The demos.Cube On X, Y & Z
         //gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
         gl.glRotatef(rotateX,0,1,0);
         gl.glRotatef(rotateY,1,0,0);
@@ -132,7 +134,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpus(GL2 gl){
-        //# Mesh 'Cube.001' with 87 faces
+        //# Mesh 'demos.Cube.001' with 87 faces
         dp(gl,0.4f,0.5f,0.1f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.95f,0.78f,1.45f,-0.37f, 0f,3.89f,-0.95f,0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.78f,1.45f,-0.37f)));
         dp(gl,0.3f,0.8f,0.1f, new ArrayList<>(Arrays.asList(-9.19f,0.35f,-0.01f,-1f,0.87f,-0.01f, -9.19f,0.35f,-0.01f,-0.92f,1.1f,-0.07f, -9.19f,0.35f,-0.01f,-0.98f,0.93f,-1.67f, -9.19f,0.35f,-0.01f,-0.98f,0.78f,-1.67f)));
         dp(gl,0.5f,0.7f,0.6f, new ArrayList<>(Arrays.asList(9.18f,0.4f,-0.02f,0.92f,1.1f,-0.07f, 9.18f,0.4f,-0.02f,0.85f,1.42f,-0.36f, 9.18f,0.4f,-0.02f,0.86f,1.42f,0.95f, 9.18f,0.4f,-0.02f,0.92f,1.16f,1.41f)));
@@ -223,7 +225,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpusCovers(GL2 gl){
-        //# Mesh 'Cube.001' with 58 faces DONE
+        //# Mesh 'demos.Cube.001' with 58 faces DONE
         dp(gl,0.1f,0.9f,0.4f, new ArrayList<>(Arrays.asList(0f,-3.89f,0.93f,0.14f,1.4f,-0.55f, 0f,-3.89f,0.93f,0.14f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.4f,-0.55f)));
         dp(gl,0.3f,0.1f,0.1f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.93f,0.14f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.22f,-1.39f, 0f,3.89f,-0.93f,0.14f,1.22f,-1.39f)));
         dp(gl,0.2f,0.1f,0.4f, new ArrayList<>(Arrays.asList(0f,0.93f,3.89f,0.14f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.43f,-0.55f, 0f,0.93f,3.89f,0.14f,1.43f,-0.55f)));
@@ -285,7 +287,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawRightTrack(GL2 gl){
-        //# Mesh 'Cube.001' with 2 faces
+        //# Mesh 'demos.Cube.001' with 2 faces
 
         dp(gl,0.3f,0.1f,0.4f, new ArrayList<>(Arrays.asList(0f,0f,4f,0.47f,1.41f,1.48f, 0f,0f,4f,0.47f,1.45f,1.48f, 0f,0f,4f,0.34f,1.45f,1.48f, 0f,0f,4f,0.34f,1.41f,1.48f)));
         dp(gl,0.1f,0.3f,0.7f, new ArrayList<>(Arrays.asList(0f,0f,4f,-0.34f,1.41f,1.48f, 0f,0f,4f,-0.34f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.41f,1.48f)));
@@ -751,7 +753,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawTowerDetails(GL2 gl){
-        //# Mesh 'Cube.011' with 40 faces DONE
+        //# Mesh 'demos.Cube.011' with 40 faces DONE
         dp(gl,0.1f,0.4f,0.5f, new ArrayList<>(Arrays.asList(2.38f,0.15f,-0f,0.27f,1.89f,-0.36f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.44f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.61f, 2.38f,0.15f,-0f,0.27f,1.89f,-0.61f)));
         dp(gl,0f,0.8f,0.3f, new ArrayList<>(Arrays.asList(0f,0f,-1.18f,-0.29f,1.53f,-0.61f, 0f,0f,-1.18f,-0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.29f,1.53f,-0.61f)));
         dp(gl,0.3f,0.5f,0.8f, new ArrayList<>(Arrays.asList(-2.38f,0.15f,-0f,-0.29f,1.53f,-0.44f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.36f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.61f, -2.38f,0.15f,-0f,-0.29f,1.53f,-0.61f)));
@@ -792,7 +794,7 @@ public class MulticolorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0f,0.2f,0.5f, new ArrayList<>(Arrays.asList(0.53f,0.5f,-1.12f,-0.45f,1.92f,0.16f, 0.53f,0.5f,-1.12f,-0.57f,1.48f,0.1f, 0.53f,0.5f,-1.12f,-0.6f,1.48f,0.1f, 0.53f,0.5f,-1.12f,-0.47f,1.93f,0.16f)));
         dp(gl,0.4f,0.9f,0.4f, new ArrayList<>(Arrays.asList(-0.64f,-2.42f,-0.01f,-0.57f,1.48f,0.1f, -0.64f,-2.42f,-0.01f,-0.61f,1.48f,0.5f, -0.64f,-2.42f,-0.01f,-0.63f,1.48f,0.49f, -0.64f,-2.42f,-0.01f,-0.6f,1.48f,0.1f)));
         dp(gl,0.6f,0f,0.1f, new ArrayList<>(Arrays.asList(0.64f,2.42f,0.01f,-0.47f,1.92f,0.45f, 0.64f,2.42f,0.01f,-0.45f,1.92f,0.16f, 0.64f,2.42f,0.01f,-0.47f,1.93f,0.16f, 0.64f,2.42f,0.01f,-0.49f,1.93f,0.45f)));
-//# Mesh 'Cube.011' with 1 faces
+//# Mesh 'demos.Cube.011' with 1 faces
 
         dp(gl,0.7f,0.1f,0.8f, new ArrayList<>(Arrays.asList(-0.02f,0f,1.18f,-0.19f,2.11f,0.55f, -0.02f,0f,1.18f,-0.19f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.11f,0.55f)));
     }

@@ -1,3 +1,5 @@
+package demos;
+
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.*;
@@ -43,7 +45,7 @@ public class Cube extends JFrame implements GLEventListener, MouseMotionListener
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, 0f, -5.0f );
 
-        // Rotate The Cube On X, Y & Z
+        // Rotate The demos.Cube On X, Y & Z
         //gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
         gl.glRotatef(rotateX,0,1,0);
         gl.glRotatef(rotateY,1,0,0);

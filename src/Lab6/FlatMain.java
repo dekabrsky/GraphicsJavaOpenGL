@@ -1,16 +1,24 @@
+package Lab6;
+
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.awt.GLCanvas;
 
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class OneTriangleAWT {
-
+public class FlatMain {
     public static void main( String [] args ) {
+        drawFigure(new Triangle());
+        drawFigure(new Quad());
+        drawFigure(new RegularPolygon());
+        drawFigure(new Circle());
+    }
+
+    private static void drawFigure(FlatFigure figure) {
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
         final GLCanvas glcanvas = new GLCanvas( glcapabilities );
@@ -18,8 +26,8 @@ public class OneTriangleAWT {
         glcanvas.addGLEventListener( new GLEventListener() {
 
             @Override
-            public void reshape( GLAutoDrawable glautodrawable, int x, int y, int width, int height ) {
-                OneTriangle.setup( glautodrawable.getGL().getGL2(), width, height );
+            public void reshape(GLAutoDrawable glautodrawable, int x, int y, int width, int height ) {
+                figure.setup( glautodrawable.getGL().getGL2(), width, height );
             }
 
             @Override
@@ -32,12 +40,12 @@ public class OneTriangleAWT {
 
             @Override
             public void display( GLAutoDrawable glautodrawable ) {
-                OneTriangle.render( glautodrawable.getGL().getGL2(), glautodrawable.getSurfaceWidth(), glautodrawable.getSurfaceHeight() );
+                figure.render( glautodrawable.getGL().getGL2(), glautodrawable.getSurfaceWidth(), glautodrawable.getSurfaceHeight() );
             }
         });
 
 
-        final Frame frame = new Frame( "One Triangle AWT" );
+        final Frame frame = new Frame( figure.getClass().getName() );
         frame.add( glcanvas );
         frame.addWindowListener( new WindowAdapter() {
             public void windowClosing( WindowEvent windowevent ) {
@@ -47,7 +55,7 @@ public class OneTriangleAWT {
             }
         });
 
-        frame.setSize( 640, 480 );
+        frame.setSize( 600, 600 );
         frame.setVisible( true );
     }
 }
