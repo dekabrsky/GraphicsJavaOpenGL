@@ -19,7 +19,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
     private int lastX, lastY;
     private static float rotateX, rotateY;
-    private GLU glu = new GLU();
+    private final GLU glu = new GLU();
     Texture tex;
     int[] textures = new int[1];
 
@@ -30,22 +30,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, -1.0f, -6.0f );
 
-        gl.glEnable(GL2.GL_TEXTURE_2D);
-
-
-        File textureFile = new File("src/textures/metal.jpg");
-        try {
-            tex = TextureIO.newTexture(textureFile, true);
-            tex.enable(gl);
-            tex.bind(gl);
-            textures[0] = tex.getTextureObject(gl);
-            gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Rotate The Cube On X, Y & Z
-        //gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
         gl.glRotatef(rotateX,0,1,0);
         gl.glRotatef(rotateY,1,0,0);
 
@@ -65,7 +49,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         drawLeftAmortisation(gl);
 
         gl.glFlush();
-        //rquad -= 0.15f;
     }
 
     public void dp(GL2 gl,
@@ -92,18 +75,12 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
                     gl.glTexCoord2f(texcoords.left(), texcoords.bottom());
                     break;
                 default:
-                    continue;
             }
         }
         gl.glEnd();
     }
 
     public void greenLight(GL2 gl){
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-        gl.glEnable(GL2.GL_NORMALIZE);
-        gl.glEnable(GL2.GL_COLOR_MATERIAL);
-
         float[] ambientLight = { 0.1f, 0.f, 0.f,0f };  // weak RED ambient
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);
 
@@ -125,6 +102,21 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glEnable( GL2.GL_DEPTH_TEST );
         gl.glDepthFunc( GL2.GL_LEQUAL );
         gl.glHint( GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST );
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
+        gl.glEnable(GL2.GL_TEXTURE_2D);
+        File textureFile = new File("src/textures/metal.jpg");
+        try {
+            tex = TextureIO.newTexture(textureFile, true);
+            tex.enable(gl);
+            tex.bind(gl);
+            textures[0] = tex.getTextureObject(gl);
+            gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -148,12 +140,11 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         final GLProfile profile = GLProfile.get( GLProfile.GL2 );
         GLCapabilities capabilities = new GLCapabilities( profile );
 
-        // The canvas
         final GLCanvas glcanvas = new GLCanvas( capabilities );
         RightColorTank tank = new RightColorTank();
 
         glcanvas.addGLEventListener( tank );
-        glcanvas.setSize( 600, 600 );
+        glcanvas.setSize( 800, 800 );
 
         final JFrame frame = new JFrame ( " Multicolored tank" );
         frame.getContentPane().add( glcanvas );
@@ -437,6 +428,9 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0.64f,0.63f,0.85f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,-0.53f,0.84f,0.03f, 4.13f,0f,0f,-0.53f,0.83f,-0.27f, 4.13f,0f,0f,-0.53f,0.79f,-0.27f, 4.13f,0f,0f,-0.53f,0.81f,0.03f)));
         dp(gl,0.64f,0.61f,0.86f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,-1.09f,0.84f,0.03f, -4.13f,0f,0f,-1.09f,0.86f,0.32f, -4.13f,0f,0f,-1.09f,0.82f,0.33f, -4.13f,0f,0f,-1.09f,0.81f,0.03f)));
         dp(gl,0.61f,0.62f,0.89f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,-0.53f,0.86f,0.32f, 4.13f,0f,0f,-0.53f,0.84f,0.03f, 4.13f,0f,0f,-0.53f,0.81f,0.03f, 4.13f,0f,0f,-0.53f,0.82f,0.33f)));
+
+        dp(gl,0.8f,0.6f,1f, new ArrayList<>(Arrays.asList(-0.02f,0f,1.18f,-0.19f,2.11f,0.55f, -0.02f,0f,1.18f,-0.19f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.11f,0.55f)));
+
         gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
     }
 
@@ -840,8 +834,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         dp(gl,0.18f,0.65f,0.16f, new ArrayList<>(Arrays.asList(-0.64f,-2.42f,-0.01f,-0.57f,1.48f,0.1f, -0.64f,-2.42f,-0.01f,-0.61f,1.48f,0.5f, -0.64f,-2.42f,-0.01f,-0.63f,1.48f,0.49f, -0.64f,-2.42f,-0.01f,-0.6f,1.48f,0.1f)));
         dp(gl,0.16f,0.67f,0.11f, new ArrayList<>(Arrays.asList(0.64f,2.42f,0.01f,-0.47f,1.92f,0.45f, 0.64f,2.42f,0.01f,-0.45f,1.92f,0.16f, 0.64f,2.42f,0.01f,-0.47f,1.93f,0.16f, 0.64f,2.42f,0.01f,-0.49f,1.93f,0.45f)));
         //# Mesh 'Cube.011' with 1 faces
-
-        dp(gl,0.8f,0.6f,1f, new ArrayList<>(Arrays.asList(-0.02f,0f,1.18f,-0.19f,2.11f,0.55f, -0.02f,0f,1.18f,-0.19f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.16f,0.55f, -0.02f,0f,1.18f,-0.34f,2.11f,0.55f)));
     }
 
     void drawGun(GL2 gl){
