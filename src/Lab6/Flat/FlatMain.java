@@ -1,4 +1,4 @@
-package Lab6;
+package Lab6.Flat;
 
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -14,8 +14,8 @@ public class FlatMain {
     public static void main( String [] args ) {
         drawFigure(new Triangle());
         drawFigure(new Quad());
-        drawFigure(new RegularPolygon());
-        drawFigure(new Circle());
+        drawFigure(new RegularPolygon(10));
+        drawFigure(new RegularPolygon(360)); // Круг
     }
 
     private static void drawFigure(FlatFigure figure) {

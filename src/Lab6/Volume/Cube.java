@@ -1,42 +1,16 @@
-package demos;
+package Lab6.Volume;
 
-import javax.swing.JFrame;
-
-import com.jogamp.opengl.*;
-import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.FPSAnimator;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
-public class Cube extends JFrame implements GLEventListener, MouseMotionListener {
-
-    public static DisplayMode dm, dm_old;
+public class Cube implements VolumeFigure {
     private int lastX, lastY;
-    private static float rotateX, rotateY;
+    private static float rotateX = 0f, rotateY = 0f;
     private GLU glu = new GLU();
-    //private float rquad = 0.0f;
 
-    public void dp(GL2 gl,
-                            float c1, float c2, float c3,
-                            float n11, float n12, float n13,
-                            float v11, float v12, float v13,
-                            float n21, float n22, float n23,
-                            float v21, float v22, float v23,
-                            float n31, float n32, float n33,
-                            float v31, float v32, float v33){
-        gl.glBegin(9);
-        gl.glColor3f(c1, c2, c3);
-        gl.glNormal3f(n11, n12, n13);
-        gl.glVertex3f(v11, v12, v13);
-        gl.glNormal3f(n21, n22, n23);
-        gl.glVertex3f(v21, v22, v23);
-        gl.glNormal3f(n31, n32, n33);
-        gl.glVertex3f(v31, v32, v33);
-        gl.glEnd();
-    }
     @Override
     public void display( GLAutoDrawable drawable ) {
 
@@ -45,12 +19,9 @@ public class Cube extends JFrame implements GLEventListener, MouseMotionListener
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, 0f, -5.0f );
 
-        // Rotate The demos.Cube On X, Y & Z
-        //gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
         gl.glRotatef(rotateX,0,1,0);
         gl.glRotatef(rotateY,1,0,0);
 
-        //giving different colors to different sides
         gl.glBegin(GL2.GL_QUADS);
         gl.glColor3f(1f,0f,0f); //red color
         gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
@@ -90,7 +61,6 @@ public class Cube extends JFrame implements GLEventListener, MouseMotionListener
         gl.glEnd(); // Done Drawing The Quad
 
         gl.glFlush();
-        //rquad -= 0.15f;
     }
 
     @Override
@@ -111,8 +81,6 @@ public class Cube extends JFrame implements GLEventListener, MouseMotionListener
 
     @Override
     public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ) {
-
-        // TODO Auto-generated method stub
         final GL2 gl = drawable.getGL().getGL2();
 
         final float h = ( float ) width / ( float ) height;
@@ -123,29 +91,6 @@ public class Cube extends JFrame implements GLEventListener, MouseMotionListener
         glu.gluPerspective( 45.0f, h, 1.0, 20.0 );
         gl.glMatrixMode( GL2.GL_MODELVIEW );
         gl.glLoadIdentity();
-    }
-
-    public static void main(String[] args) {
-
-        final GLProfile profile = GLProfile.get( GLProfile.GL2 );
-        GLCapabilities capabilities = new GLCapabilities( profile );
-
-        // The canvas
-        final GLCanvas glcanvas = new GLCanvas( capabilities );
-        Cube cube = new Cube();
-
-        glcanvas.addGLEventListener( cube );
-        glcanvas.setSize( 600, 600 );
-
-        final JFrame frame = new JFrame ( " Multicolored cube" );
-        frame.getContentPane().add( glcanvas );
-        frame.setSize( frame.getContentPane().getPreferredSize() );
-        frame.setVisible( true );
-        rotateX = 0f; rotateY = 0f;
-        glcanvas.addMouseMotionListener(new Cube());
-        final FPSAnimator animator = new FPSAnimator(glcanvas, 300,true);
-
-        animator.start();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package Lab6;
+package Lab6.Flat;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -12,9 +12,12 @@ public class RegularPolygon implements FlatFigure {
     Random generator = new Random();
     int sidesCnt;
 
+    public RegularPolygon (int sidesCnt){
+        this.sidesCnt = sidesCnt;
+    }
+
     @Override
     public void setup(GL2 gl2, int width, int height ) {
-        setupSidesCnt();
         gl2.glMatrixMode( GL2.GL_PROJECTION );
         gl2.glLoadIdentity();
 
@@ -25,10 +28,6 @@ public class RegularPolygon implements FlatFigure {
         gl2.glLoadIdentity();
 
         gl2.glViewport( 0, 0, width, height );
-    }
-
-    public void setupSidesCnt(){
-        this.sidesCnt = 10;
     }
 
     @Override
