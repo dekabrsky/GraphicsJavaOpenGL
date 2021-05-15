@@ -16,20 +16,20 @@ public class VolumeMain extends JFrame {
         final GLProfile profile = GLProfile.get( GLProfile.GL2 );
         GLCapabilities capabilities = new GLCapabilities( profile );
 
-        final GLCanvas glcanvas = new GLCanvas( capabilities );
-        List<VolumeFigure> figures = Arrays.asList(new Cube());
+        List<VolumeFigure> figures = Arrays.asList(new Cube(), new Pyramid());
         for (VolumeFigure figure: figures) {
+            final GLCanvas glcanvas = new GLCanvas( capabilities );
 
             glcanvas.addGLEventListener(figure);
             glcanvas.setSize(600, 600);
 
-            final JFrame frame = new JFrame(" Multicolored cube");
+            final JFrame frame = new JFrame(figure.getClass().getSimpleName());
             frame.getContentPane().add(glcanvas);
             frame.setSize(frame.getContentPane().getPreferredSize());
             frame.setVisible(true);
             glcanvas.addMouseMotionListener(figure);
-            final FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
 
+            FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
             animator.start();
         }
     }
