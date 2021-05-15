@@ -16,7 +16,15 @@ public class VolumeMain extends JFrame {
         final GLProfile profile = GLProfile.get( GLProfile.GL2 );
         GLCapabilities capabilities = new GLCapabilities( profile );
 
-        List<VolumeFigure> figures = Arrays.asList(new Cube(), new Pyramid());
+        List<VolumeFigure> figures = Arrays.asList(
+                new Cube(),
+                new PolyPyramid(4),
+                new PolyPyramid(7),
+                new PolyPyramid(100),
+                new PolyTrapeze(4, 0.5f, 1.5f),
+                new PolyTrapeze(100, 0.5f, 1.5f),
+                new Sphere()
+        );
         for (VolumeFigure figure: figures) {
             final GLCanvas glcanvas = new GLCanvas( capabilities );
 
