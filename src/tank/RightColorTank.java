@@ -50,10 +50,18 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         drawLeftWheels(gl);
         drawLeftAmortisation(gl);
 
-        TankUtils.Wheel wheel = new TankUtils.Wheel(new Point3D(1, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex);
-        wheel.draw();
-        TankUtils.Wheel wheel2 = new TankUtils.Wheel(new Point3D(1, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex);
-        wheel2.draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, 0.3), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, -0.1), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, -0.5), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(1, 0.23, -0.9), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 0.3), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.1), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.5), 0.17f, 0.3f, gl, wheelTex).draw();
+        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.9), 0.17f, 0.3f, gl, wheelTex).draw();
 
         gl.glFlush();
     }
