@@ -2,22 +2,20 @@ package tank;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 import javafx.geometry.Point3D;
 
 import java.util.ArrayList;
 
 public class TankUtils {
-
     public static class Wheel {
-        private Point3D top;
-        private Point3D bottom;
+        private Point3D top, bottom, center;
         private int sidesCnt = 100;
         private float topRadius, bottomRadius;
         private GL2 gl;
         private Texture texture;
 
         public Wheel(Point3D center, float radius, float depth, GL2 gl, Texture texture){
+            this.center = center;
             this.topRadius = radius;
             this.bottomRadius = radius;
             top = center;
@@ -28,20 +26,22 @@ public class TankUtils {
 
         public void draw() {
             ArrayList<Point3D> bottomVertices = calcVertices(bottom, bottomRadius);
-
-            drawPolygon(gl, bottomVertices);
+            ArrayList<Point3D> miniBottomVertices = calcVertices(bottom, bottomRadius / 5);
+            drawPolygon(gl, bottomVertices, true);
+            drawPolygon(gl, miniBottomVertices, false);
 
             ArrayList<Point3D> topVertices = calcVertices(top, topRadius);
-
-            drawPolygon(gl, topVertices);
+            ArrayList<Point3D> miniTopVertices = calcVertices(top, topRadius / 5);
+            drawPolygon(gl, topVertices, true);
+            drawPolygon(gl, miniTopVertices, false);
 
             for (int i = 0; i < sidesCnt; i++){
-                //gl.glColor3f(i % 2, i % 3, i % 5);
                 Point3D currentVertice = bottomVertices.get(i);
                 Point3D nextVertice = bottomVertices.get((i + 1) % sidesCnt);
                 Point3D topCurrentVertice = topVertices.get(i);
                 Point3D topNextVertice = topVertices.get((i + 1) % sidesCnt);
                 gl.glBegin(GL2.GL_POLYGON);
+                gl.glColor3f(0.55f + 0.05f * (i % 2),0.55f + 0.05f * (i % 3),0.8f + 0.05f * (i % 5));
                 gl.glVertex3f(
                         (float) nextVertice.getX(),
                         (float) nextVertice.getY(),
@@ -64,39 +64,28 @@ public class TankUtils {
                 );
                 gl.glEnd();
             }
+
+            drawStar(top, topVertices);
+            drawStar(bottom, bottomVertices);
+
             gl.glFlush();
         }
 
-        private void drawPolygon(GL2 gl, ArrayList<Point3D> vertices) {
-            gl.glBindTexture(GL2.GL_TEXTURE_2D, 2);
-            TextureCoords texcoords = texture.getImageTexCoords();
+        private void drawPolygon(GL2 gl, ArrayList<Point3D> vertices, boolean state) {
             gl.glBegin(GL2.GL_POLYGON);
-            int i = 0;
+            if (state) {
+                gl.glColor3f(0.45f, 0.45f, 0.70f);
+            } else {
+                gl.glColor3f(0.25f, 0.25f, 0.5f);
+            }
             for (Point3D vertice : vertices) {
-                gl.glVertex3f(
-                        (float) vertice.getX(),
-                        (float) vertice.getY(),
-                        (float) vertice.getZ()
-                );
-                switch (i) {
-                    case (0) :
-                        gl.glTexCoord2f(texcoords.right(), texcoords.bottom());
-                        break;
-                    case (25) :
-                        gl.glTexCoord2f(texcoords.left(), texcoords.bottom());
-                        break;
-                    case (50) :
-                        gl.glTexCoord2f(texcoords.left(), texcoords.top());
-                        break;
-                    case (75) :
-                        gl.glTexCoord2f(texcoords.right(), texcoords.top());
-                        break;
-                    default:
-                }
-                i++;
+                    gl.glVertex3f(
+                            (float) vertice.getX(),
+                            (float) vertice.getY(),
+                            (float) vertice.getZ()
+                    );
             }
             gl.glEnd();
-            gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
         }
 
         private ArrayList<Point3D> calcVertices(Point3D center, float radius)
@@ -116,6 +105,35 @@ public class TankUtils {
 
             return vertices;
         }
-    }
 
+        private void drawStar(Point3D center, ArrayList<Point3D> topVertices){
+            for (int i = 0; i < sidesCnt; i+=10){
+                Point3D topCurrentVertice = topVertices.get(i);
+                Point3D topNextVertice = topVertices.get((i + 1) % sidesCnt);
+                gl.glBegin(GL2.GL_POLYGON);
+                gl.glColor3f(0.25f,0.25f + 0.05f * (i % 3),0.5f + 0.05f * (i % 5));
+                gl.glVertex3f(
+                        (float) center.getX(),
+                        (float) center.getY(),
+                        (float) center.getZ()
+                );
+                gl.glVertex3f(
+                        (float) topNextVertice.getX(),
+                        (float) topNextVertice.getY(),
+                        (float) topNextVertice.getZ()
+                );
+                gl.glVertex3f(
+                        (float) topCurrentVertice.getX(),
+                        (float) topCurrentVertice.getY(),
+                        (float) topCurrentVertice.getZ()
+                );
+                gl.glVertex3f(
+                        (float) center.getX(),
+                        (float) center.getY(),
+                        (float) center.getZ()
+                );
+                gl.glEnd();
+            }
+        }
+    }
 }
