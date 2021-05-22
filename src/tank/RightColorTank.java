@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
+import javafx.geometry.Point3D;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -21,8 +22,8 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     private int lastX, lastY;
     private static float rotateX, rotateY;
     private final GLU glu = new GLU();
-    Texture tex;
-    int[] textures = new int[1];
+    Texture tex, wheelTex;
+    int[] textures = new int[2];
 
     @Override
     public void display( GLAutoDrawable drawable ) {
@@ -48,6 +49,11 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         drawLeftTrack(gl);
         drawLeftWheels(gl);
         drawLeftAmortisation(gl);
+
+        TankUtils.Wheel wheel = new TankUtils.Wheel(new Point3D(1, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex);
+        wheel.draw();
+        TankUtils.Wheel wheel2 = new TankUtils.Wheel(new Point3D(1, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex);
+        wheel2.draw();
 
         gl.glFlush();
     }
@@ -108,12 +114,15 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glEnable(GL2.GL_NORMALIZE);
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glEnable(GL2.GL_TEXTURE_2D);
-        File textureFile = new File("src/textures/metal.jpg");
+        File trackTexture = new File("src/textures/metal.jpg");
+        File wheelTexture = new File("src/textures/wheel.jpg");
         try {
-            tex = TextureIO.newTexture(textureFile, true);
+            tex = TextureIO.newTexture(trackTexture, true);
+            wheelTex = TextureIO.newTexture(wheelTexture, true);
             tex.enable(gl);
             tex.bind(gl);
             textures[0] = tex.getTextureObject(gl);
+            textures[1] = wheelTex.getTextureObject(gl);
             gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
         } catch (IOException e) {
             e.printStackTrace();
