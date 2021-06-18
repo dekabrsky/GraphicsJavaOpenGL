@@ -8,6 +8,8 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 import javafx.geometry.Point3D;
+import tank.elements.Gun;
+import tank.elements.Wheel;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -24,10 +26,10 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     private final GLU glu = new GLU();
     Texture tex, wheelTex;
     int[] textures = new int[2];
+    private GL2 gl;
 
     @Override
     public void display( GLAutoDrawable drawable ) {
-        final GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT );
         gl.glLoadIdentity();
         gl.glTranslatef( 0f, -1.0f, -6.0f );
@@ -36,6 +38,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glRotatef(rotateY,1,0,0);
 
         greenLight(gl);
+        toggleEdgeClipping(true);
 
         drawCorpus(gl);
         drawCorpusCovers(gl);
@@ -49,6 +52,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         drawLeftAmortisation(gl);
         drawRightWheels(gl);
         drawLeftWheels(gl);
+        //new Gun(10, 0.1f, 0.1f, new Point3D(-0f,-0.31f,-0.75f), new Point3D(-0.5f,-0.31f,-0.75f)).draw(gl);
         gl.glFlush();
     }
 
@@ -96,7 +100,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
     @Override
     public void init( GLAutoDrawable drawable ) {
-        final GL2 gl = drawable.getGL().getGL2();
+        gl = drawable.getGL().getGL2();
         gl.glShadeModel( GL2.GL_SMOOTH );
         gl.glClearColor( 0.1f, 0.3f, 0.2f, 0f );
         gl.glClearDepth( 1.0f );
@@ -108,6 +112,9 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         gl.glEnable(GL2.GL_NORMALIZE);
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glEnable(GL2.GL_TEXTURE_2D);
+
+        toggleEdgeClipping(true);
+
         File trackTexture = new File("src/textures/metal.jpg");
         File wheelTexture = new File("src/textures/wheel.jpg");
         try {
@@ -125,10 +132,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
     @Override
     public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ) {
-
-        // TODO Auto-generated method stub
-        final GL2 gl = drawable.getGL().getGL2();
-
         final float h = ( float ) width / ( float ) height;
         gl.glViewport( 0, 0, width, height );
         gl.glMatrixMode( GL2.GL_PROJECTION );
@@ -140,7 +143,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     public static void main(String[] args) {
-
         final GLProfile profile = GLProfile.get( GLProfile.GL2 );
         GLCapabilities capabilities = new GLCapabilities( profile );
 
@@ -173,6 +175,16 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         rotateY += e.getY() - lastY;
         lastX = e.getX();
         lastY = e.getY();
+    }
+
+    void toggleEdgeClipping(boolean enable){
+        if (enable){
+            gl.glEnable(GL2.GL_CULL_FACE);
+            gl.glCullFace(GL2.GL_FRONT);
+            gl.glFrontFace(GL2.GL_CW);
+        } else {
+            gl.glDisable(GL2.GL_CULL_FACE);
+        }
     }
 
     void drawCorpus(GL2 gl) {
@@ -330,6 +342,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
 
     void drawRightTrack(GL2 gl){
         gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0]);
+        toggleEdgeClipping(false);
         dp(gl,0.64f,0.63f,0.87f, new ArrayList<>(Arrays.asList(0f,0f,4f,0.47f,1.41f,1.48f, 0f,0f,4f,0.47f,1.45f,1.48f, 0f,0f,4f,0.34f,1.45f,1.48f, 0f,0f,4f,0.34f,1.41f,1.48f)));
         dp(gl,0.64f,0.62f,0.87f, new ArrayList<>(Arrays.asList(0f,0f,4f,-0.34f,1.41f,1.48f, 0f,0f,4f,-0.34f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.45f,1.48f, 0f,0f,4f,-0.47f,1.41f,1.48f)));
         dp(gl,0.62f,0.63f,0.8f, new ArrayList<>(Arrays.asList(-0f,4.12f,-0.2f,-0.53f,0.89f,0.9f, -0f,4.12f,-0.2f,-1.09f,0.89f,0.9f, -0f,4.12f,-0.2f,-1.09f,0.87f,0.61f, -0f,4.12f,-0.2f,-0.53f,0.87f,0.61f)));
@@ -439,20 +452,18 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawRightWheels(GL2 gl){
-        new TankUtils.Wheel(new Point3D(-0.7, 0.6, 1.4), 0.26f, 0.3f, gl, wheelTex).draw();
+        toggleEdgeClipping(false);
 
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, 0.3), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.1), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.5), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(-0.7, 0.23, -0.9), 0.17f, 0.3f, gl, wheelTex).draw();
+        new Wheel(new Point3D(-0.7, 0.6, 1.4), 0.26f, 0.3f, gl).draw();
 
-        new TankUtils.Wheel(new Point3D(-0.7, 0.5, -1.25), 0.23f, 0.3f, gl, wheelTex).draw();
+        for (double z = 1.1; z >= -0.9; z-=0.4)
+            new Wheel(new Point3D(-0.7, 0.23, z), 0.17f, 0.3f, gl).draw();
+
+        new Wheel(new Point3D(-0.7, 0.5, -1.25), 0.23f, 0.3f, gl).draw();
     }
 
     void drawRightAmortisation(GL2 gl){
-        //# Mesh 'Plane.002' with 60 faces DONE
+        toggleEdgeClipping(false);
         dp(gl,0.21f,0.45f,0.24f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,-0.67f,0.53f,-0.55f, 4.13f,0f,0f,-0.67f,0.71f,-0.55f, 4.13f,0f,0f,-0.67f,0.71f,-0.88f, 4.13f,0f,0f,-0.67f,0.53f,-0.88f)));
         dp(gl,0.23f,0.44f,0.21f, new ArrayList<>(Arrays.asList(0f,-0f,-4.13f,-0.67f,0.53f,-0.88f, 0f,-0f,-4.13f,-0.67f,0.71f,-0.88f, 0f,-0f,-4.13f,-1f,0.71f,-0.88f, 0f,-0f,-4.13f,-1f,0.53f,-0.88f)));
         dp(gl,0.21f,0.43f,0.24f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,-1f,0.53f,-0.88f, -4.13f,0f,0f,-1f,0.71f,-0.88f, -4.13f,0f,0f,-1f,0.71f,-0.55f, -4.13f,0f,0f,-1f,0.53f,-0.55f)));
@@ -738,7 +749,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawLeftTrack(GL2 gl){
-        //# Mesh 'Cylinder' with 1 faces
+        toggleEdgeClipping(false);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0]);
         dp(gl,0.61f,0.62f,0.8f, new ArrayList<>(Arrays.asList(0f,0f,0.82f,0.03f,1.66f,1.81f, 0f,0f,0.82f,0f,1.67f,1.81f, 0f,0f,0.82f,-0.03f,1.66f,1.81f, 0f,0f,0.82f,-0.04f,1.63f,1.81f, 0f,0f,0.82f,-0.03f,1.6f,1.81f, 0f,0f,0.82f,0f,1.59f,1.81f, 0f,0f,0.82f,0.03f,1.6f,1.81f, 0f,0f,0.82f,0.04f,1.63f,1.81f)));
         dp(gl,0.62f,0.6f,0.85f, new ArrayList<>(Arrays.asList(0f,4.12f,-0.2f,0.53f,0.89f,0.9f, 0f,4.12f,-0.2f,1.09f,0.89f,0.9f, 0f,4.12f,-0.2f,1.09f,0.87f,0.61f, 0f,4.12f,-0.2f,0.53f,0.87f,0.61f)));
@@ -845,19 +856,18 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawLeftWheels(GL2 gl){
-        new TankUtils.Wheel(new Point3D(1, 0.6, 1.4), 0.26f, 0.3f, gl, wheelTex).draw();
+        toggleEdgeClipping(false);
 
-        new TankUtils.Wheel(new Point3D(1, 0.23, 1.1), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(1, 0.23, 0.7), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(1, 0.23, 0.3), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(1, 0.23, -0.1), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(1, 0.23, -0.5), 0.17f, 0.3f, gl, wheelTex).draw();
-        new TankUtils.Wheel(new Point3D(1, 0.23, -0.9), 0.17f, 0.3f, gl, wheelTex).draw();
+        new Wheel(new Point3D(1, 0.6, 1.4), 0.26f, 0.3f, gl).draw();
 
-        new TankUtils.Wheel(new Point3D(1, 0.5, -1.25), 0.23f, 0.3f, gl, wheelTex).draw();
+        for (double z = 1.1; z >= -0.9; z-=0.4)
+            new Wheel(new Point3D(1, 0.23, z), 0.17f, 0.3f, gl).draw();
+
+        new Wheel(new Point3D(1, 0.5, -1.25), 0.23f, 0.3f, gl).draw();
     }
 
     void drawLeftAmortisation(GL2 gl){
+        toggleEdgeClipping(false);
         dp(gl,0.22f,0.4f,0.22f, new ArrayList<>(Arrays.asList(-4.13f,0f,0f,0.67f,0.53f,-0.55f, -4.13f,0f,0f,0.67f,0.71f,-0.55f, -4.13f,0f,0f,0.67f,0.71f,-0.88f, -4.13f,0f,0f,0.67f,0.53f,-0.88f)));
         dp(gl,0.2f,0.4f,0.22f, new ArrayList<>(Arrays.asList(0f,0f,-4.13f,0.67f,0.53f,-0.88f, 0f,0f,-4.13f,0.67f,0.71f,-0.88f, 0f,0f,-4.13f,1f,0.71f,-0.88f, 0f,0f,-4.13f,1f,0.53f,-0.88f)));
         dp(gl,0.2f,0.43f,0.22f, new ArrayList<>(Arrays.asList(4.13f,0f,0f,1f,0.53f,-0.88f, 4.13f,0f,0f,1f,0.71f,-0.88f, 4.13f,0f,0f,1f,0.71f,-0.55f, 4.13f,0f,0f,1f,0.53f,-0.55f)));
