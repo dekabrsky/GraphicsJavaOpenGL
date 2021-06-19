@@ -1,4 +1,4 @@
-package Lab6.Flat;
+package Lab6_Primitives.Flat;
 
 import com.jogamp.opengl.GL2;
 

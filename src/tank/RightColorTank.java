@@ -8,7 +8,6 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 import javafx.geometry.Point3D;
-import tank.elements.Gun;
 import tank.elements.Wheel;
 
 import javax.swing.*;
@@ -24,21 +23,21 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     private int lastX, lastY;
     private static float rotateX, rotateY;
     private final GLU glu = new GLU();
-    Texture tex, wheelTex;
-    int[] textures = new int[2];
+    Texture tex;
+    int[] textures = new int[1];
     private GL2 gl;
 
     @Override
     public void display( GLAutoDrawable drawable ) {
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT );
         gl.glLoadIdentity();
-        gl.glTranslatef( 0f, -1.0f, -6.0f );
+        gl.glTranslatef( 0f, -1.0f, -6.0f ); // делаем танк поглубже и пониже для удобства просмотра
 
         gl.glRotatef(rotateX,0,1,0);
         gl.glRotatef(rotateY,1,0,0);
 
         greenLight(gl);
-        toggleEdgeClipping(true);
+        toggleEdgeClipping(true); // по умолчанию отсекаем невидимые грани
 
         drawCorpus(gl);
         drawCorpusCovers(gl);
@@ -52,7 +51,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         drawLeftAmortisation(gl);
         drawRightWheels(gl);
         drawLeftWheels(gl);
-        //new Gun(10, 0.1f, 0.1f, new Point3D(-0f,-0.31f,-0.75f), new Point3D(-0.5f,-0.31f,-0.75f)).draw(gl);
         gl.glFlush();
     }
 
@@ -66,7 +64,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         while (i < vertices.size()){
             gl.glNormal3f(vertices.get(i++), vertices.get(i++), vertices.get(i++));
             gl.glVertex3f(vertices.get(i++), vertices.get(i++), vertices.get(i++));
-            switch (i) {
+            switch (i) { // т.к. даем список точек, углы попадают на эти итерации
                 case (6) :
                     gl.glTexCoord2f(texcoords.right(), texcoords.bottom());
                     break;
@@ -86,10 +84,10 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     public void greenLight(GL2 gl){
-        float[] ambientLight = { 0.1f, 0.f, 0.f,0f };  // weak RED ambient
+        float[] ambientLight = { 0.1f, 0.f, 0.f,0f };
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);
 
-        float[] diffuseLight = { 0.5f,1f, 0.5f,0f };  // multicolor diffuse
+        float[] diffuseLight = { 0.5f,1f, 0.5f,0f };
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0);
     }
 
@@ -101,29 +99,26 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     @Override
     public void init( GLAutoDrawable drawable ) {
         gl = drawable.getGL().getGL2();
-        gl.glShadeModel( GL2.GL_SMOOTH );
-        gl.glClearColor( 0.1f, 0.3f, 0.2f, 0f );
-        gl.glClearDepth( 1.0f );
-        gl.glEnable( GL2.GL_DEPTH_TEST );
-        gl.glDepthFunc( GL2.GL_LEQUAL );
-        gl.glHint( GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST );
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-        gl.glEnable(GL2.GL_NORMALIZE);
-        gl.glEnable(GL2.GL_COLOR_MATERIAL);
-        gl.glEnable(GL2.GL_TEXTURE_2D);
+        gl.glShadeModel( GL2.GL_SMOOTH ); // режим сглаживания (Гуро)
+        gl.glClearColor( 0.1f, 0.3f, 0.2f, 0f ); // зеленый фон
+        gl.glClearDepth( 1.0f ); // задает значения для очистки буфера глубины
+        gl.glEnable( GL2.GL_DEPTH_TEST ); // включаем тест глубины
+        gl.glDepthFunc( GL2.GL_LEQUAL ); // есть рисуется все, что имеет глубину, меньшую или равную текущей
+        gl.glHint( GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST ); // указывает качество цвета, интерполяций - установлено лучшее
+        gl.glEnable(GL2.GL_LIGHTING); // включаем освещение
+        gl.glEnable(GL2.GL_LIGHT0); // включаем нулевой источник света
+        gl.glEnable(GL2.GL_NORMALIZE); // поручаем OpenGL приводить нормали к единичной длине
+        gl.glEnable(GL2.GL_COLOR_MATERIAL); // включаем назначение цвета материалу
+        gl.glEnable(GL2.GL_TEXTURE_2D); // или текстуры
 
         toggleEdgeClipping(true);
 
-        File trackTexture = new File("src/textures/metal.jpg");
-        File wheelTexture = new File("src/textures/wheel.jpg");
+        File trackTexture = new File("src/textures/metal.jpg"); //текстура траков
         try {
             tex = TextureIO.newTexture(trackTexture, true);
-            wheelTex = TextureIO.newTexture(wheelTexture, true);
             tex.enable(gl);
             tex.bind(gl);
             textures[0] = tex.getTextureObject(gl);
-            textures[1] = wheelTex.getTextureObject(gl);
             gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
         } catch (IOException e) {
             e.printStackTrace();
@@ -152,7 +147,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
         glcanvas.addGLEventListener( tank );
         glcanvas.setSize( 800, 800 );
 
-        final JFrame frame = new JFrame ( " Multicolored tank" );
+        final JFrame frame = new JFrame ( "Легкий танк Шерман" );
         frame.getContentPane().add( glcanvas );
         frame.setSize( frame.getContentPane().getPreferredSize() );
         frame.setVisible( true );
@@ -188,7 +183,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpus(GL2 gl) {
-        //# Mesh 'demos.Cube.001' with 87 faces
         dp(gl,0.07f,0.64f,0.12f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.95f,0.78f,1.45f,-0.37f, 0f,3.89f,-0.95f,0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.85f,1.16f,-1.55f, 0f,3.89f,-0.95f,-0.78f,1.45f,-0.37f)));
         dp(gl,0.18f,0.69f,0.1f, new ArrayList<>(Arrays.asList(-9.19f,0.35f,-0.01f,-1f,0.87f,-0.01f, -9.19f,0.35f,-0.01f,-0.92f,1.1f,-0.07f, -9.19f,0.35f,-0.01f,-0.98f,0.93f,-1.67f, -9.19f,0.35f,-0.01f,-0.98f,0.78f,-1.67f)));
         dp(gl,0.1f,0.69f,0.17f, new ArrayList<>(Arrays.asList(9.18f,0.4f,-0.02f,0.92f,1.1f,-0.07f, 9.18f,0.4f,-0.02f,0.85f,1.42f,-0.36f, 9.18f,0.4f,-0.02f,0.86f,1.42f,0.95f, 9.18f,0.4f,-0.02f,0.92f,1.16f,1.41f)));
@@ -279,7 +273,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawCorpusCovers(GL2 gl){
-        //# Mesh 'demos.Cube.001' with 58 faces DONE
         dp(gl,0.19f,0.15f,0.18f, new ArrayList<>(Arrays.asList(0f,-3.89f,0.93f,0.14f,1.4f,-0.55f, 0f,-3.89f,0.93f,0.14f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.2f,-1.39f, 0f,-3.89f,0.93f,0.67f,1.4f,-0.55f)));
         dp(gl,0.16f,0.11f,0.1f, new ArrayList<>(Arrays.asList(0f,3.89f,-0.93f,0.14f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.43f,-0.55f, 0f,3.89f,-0.93f,0.67f,1.22f,-1.39f, 0f,3.89f,-0.93f,0.14f,1.22f,-1.39f)));
         dp(gl,0.17f,0.16f,0.11f, new ArrayList<>(Arrays.asList(0f,0.93f,3.89f,0.14f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.4f,-0.55f, 0f,0.93f,3.89f,0.67f,1.43f,-0.55f, 0f,0.93f,3.89f,0.14f,1.43f,-0.55f)));
@@ -452,7 +445,7 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawRightWheels(GL2 gl){
-        toggleEdgeClipping(false);
+        toggleEdgeClipping(false); // приходится выключать отсечение граней, т.к., видимо, не везде правильный порядок обхода
 
         new Wheel(new Point3D(-0.7, 0.6, 1.4), 0.26f, 0.3f, gl).draw();
 
@@ -527,7 +520,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawMiniGun(GL2 gl){
-        //# Mesh 'Sphere.001' with 66 faces DONE
         dp(gl,0.44f,0.44f,0.71f, new ArrayList<>(Arrays.asList(0f,-0.22f,-0.03f,-0.4f,1.19f,1.55f, 0f,-0.22f,-0.03f,-0.41f,1.19f,1.53f, 0f,-0.22f,-0.03f,-0.4f,1.19f,1.53f)));
         dp(gl,0.42f,0.43f,0.75f, new ArrayList<>(Arrays.asList(0.02f,0.22f,-0.02f,-0.4f,1.3f,1.55f, 0.02f,0.22f,-0.02f,-0.39f,1.3f,1.54f, 0.02f,0.22f,-0.02f,-0.4f,1.3f,1.53f)));
         dp(gl,0.45f,0.44f,0.86f, new ArrayList<>(Arrays.asList(0f,0.11f,-0.2f,-0.42f,1.26f,1.5f, 0f,0.11f,-0.2f,-0.42f,1.28f,1.51f, 0f,0.11f,-0.2f,-0.39f,1.28f,1.51f, 0f,0.11f,-0.2f,-0.38f,1.26f,1.5f)));
@@ -656,7 +648,6 @@ public class RightColorTank extends JFrame implements GLEventListener, MouseMoti
     }
 
     void drawTowerDetails(GL2 gl){
-        //# Mesh 'demos.Cube.011' with 40 faces DONE
         dp(gl,0.15f,0.64f,0.19f, new ArrayList<>(Arrays.asList(2.38f,0.15f,-0f,0.27f,1.89f,-0.36f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.44f, 2.38f,0.15f,-0f,0.29f,1.53f,-0.61f, 2.38f,0.15f,-0f,0.27f,1.89f,-0.61f)));
         dp(gl,0.14f,0.68f,0.2f, new ArrayList<>(Arrays.asList(0f,0f,-1.18f,-0.29f,1.53f,-0.61f, 0f,0f,-1.18f,-0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.27f,1.89f,-0.61f, 0f,0f,-1.18f,0.29f,1.53f,-0.61f)));
         dp(gl,0.11f,0.63f,0.16f, new ArrayList<>(Arrays.asList(-2.38f,0.15f,-0f,-0.29f,1.53f,-0.44f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.36f, -2.38f,0.15f,-0f,-0.27f,1.89f,-0.61f, -2.38f,0.15f,-0f,-0.29f,1.53f,-0.61f)));

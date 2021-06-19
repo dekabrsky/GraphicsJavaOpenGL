@@ -1,4 +1,4 @@
-package Lab6.Volume;
+package Lab6_Primitives.Volume;
 
 import javax.swing.JFrame;
 

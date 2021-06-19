@@ -1,4 +1,4 @@
-package Lab6.Volume;
+package Lab6_Primitives.Volume;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
